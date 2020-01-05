@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="col-md-4 pad-md-0">
+    <h1>Sign up</h1>
+        
+    <!-- Django attribute to catch error or successful message dynamically -->
+    {% if messages %}
+        <div class="messages col-md-12 pad-md-0">
+        {% for message in messages %}
+            <div {% if message.tags %} class="alert  alert-{{message.tags}} alert-dismissable" {% endif %}>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {% if message.tags == 'error' %}
+                <strong>Whoops! &nbsp; </strong> {{ message }}.
+                {% else %}
+                <strong>Congratulations! &nbsp; </strong> {{ message }}.
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="alert col-md-12 pad-md-10 alert-error alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Your form has errors! &nbsp; </strong>
+        {% for field in form %}            
+            {% if field.errors %}
+                {{field.errors}}.                    
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %} 
+
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username</label>
+                <input class="form-control" type="text" name="username">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input class="form-control" type="password" name="password1">
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input class="form-control" type="password" name="password2">
+            </div>
+
+            <button type="submit" class="btn btn-info">Signup</button>
+        </form>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
