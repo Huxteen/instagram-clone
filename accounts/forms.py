@@ -9,7 +9,7 @@ class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
     class Meta:
         model = User
-        fields = (
+        fields = ( 
             'username',
             'password1',
             'password2',

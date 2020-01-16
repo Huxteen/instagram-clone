@@ -8,7 +8,11 @@
         
     <!-- Django attribute to catch error or successful message dynamically -->
     {% if messages %}
-        <div class="messages col-md-12 pad-md-0">
+        {% for message in messages %}
+            {{message}} 
+        {% endfor %} 
+
+        <!-- <div class="messages col-md-12 pad-md-0">
         {% for message in messages %}
             <div {% if message.tags %} class="alert  alert-{{message.tags}} alert-dismissable" {% endif %}>
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -19,11 +23,16 @@
                 {% endif %}
             </div>
         {% endfor %}
-        </div>
+        </div> -->
     {% endif %}
 
     {% if form.errors %}
-        <div class="alert col-md-12 pad-md-10 alert-error alert-dismissible" role="alert">
+        {% for field in form %}            
+            {% if field.errors %}
+                {{field.errors}}.                    
+            {% endif %}
+        {% endfor %}
+        <!-- <div class="alert col-md-12 pad-md-10 alert-error alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <strong>Your form has errors! &nbsp; </strong>
         {% for field in form %}            
@@ -31,8 +40,9 @@
                 {{field.errors}}.                    
             {% endif %}
         {% endfor %}
-        </div>
+        </div> -->
     {% endif %} 
+                
 
         <form method="POST" action="{% url 'signup' %}">
             {% csrf_token %}
