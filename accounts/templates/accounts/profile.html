@@ -1,0 +1,44 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Create Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+
+    {% for profile in profile %}
+        <p>{{profile.description}}</p>
+        <img src="{{profile.image.url}}" height="300" width="300">
+        <p>Author: {{profile.author.username}}</p>
+        <form method="POST" action="{% url 'delete_profile' profile.id %}">
+            {% csrf_token %}
+            <input type="submit" value="delete post">
+        </form>
+        <p><a href="{% url 'update_profile' profile.id %}">Update</a></p>
+
+
+        {% empty %}
+            <p>Sorry, you have no post at this time.</p>
+    {% endfor %}
+
+
+
+
+    <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <textarea required name="description" maxlength="100" cols="30" rows="2"></textarea><br><br>
+        <input required type="file" name="image"><br><br>
+        <select name="publish" required>
+            <option value="1" selected>Publish</option>
+            <option value="0" >Unpublish</option>
+        </select><br><br>
+        <input type="submit" value="submit">
+    </form>
+
+{% endblock %}
+

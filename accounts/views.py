@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib import auth
 from accounts.forms import SignUpForm
+from django.contrib.auth.decorators import login_required
+
+from accounts.models import Profile
 
 
 # Create your views here.
@@ -58,3 +61,67 @@ def logout(request):
     if request.method == "POST":
         auth.logout(request)
         return redirect('login')
+
+
+
+
+@login_required(login_url="/")
+def profile(request):
+    uid = request.user.id
+    if request.method == "GET":
+        profile = Profile.objects.filter(author__id=uid)
+        context = {
+            'profile':profile
+            }
+        return render(request, 'accounts/profile.html', context)
+
+    if request.method == "POST":
+        create_post = Profile()
+        create_post.description = request.POST['description'][0:100]
+        create_post.image = request.FILES['image']
+        create_post.author = User(pk=uid)
+        create_post.publish = int(request.POST['publish'])
+        create_post.save()
+
+        messages.success(request, 'Profile post created successfully')
+        return redirect("profile")
+
+
+
+@login_required(login_url="/")
+def delete_profile(request, post_id):
+    if request.method == 'POST':
+        delete_post = Profile.objects.get(pk=post_id)
+        delete_post.delete()
+        return redirect('profile')
+    else:
+        return redirect('profile')
+
+
+def update_profile(request, post_id):
+    if request.method == "GET":
+        profile = Profile.objects.get(pk=post_id)
+        context = {
+            'profile':profile
+            }
+        return render(request, 'accounts/update_profile.html', context)
+
+    if request.method == "POST":
+        update_post = Profile.objects.get(pk=post_id)
+        update_post.description = request.POST['description'][0:100]
+        if 'image'in request.FILES:
+            update_post.image = request.FILES['image']
+        update_post.publish = int(request.POST['publish'])
+        update_post.save()
+
+        messages.success(request, 'Profile post updated successfully')
+        return redirect('profile')
+
+
+    
+
+
+
+
+
+    

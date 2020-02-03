@@ -1,0 +1,34 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Update Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+
+
+
+    <form method="POST" action="{% url 'update_profile' profile.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <textarea required name="description" maxlength="100" cols="30" rows="2">{{profile.description}}</textarea><br><br>
+        <img src="{{profile.image.url}}" height="40" width="40">
+        <input type="file" name="image"><br><br>
+        <select name="publish" required>
+            {% if profile.publish %}
+                <option value="1" selected>Publish</option>
+                <option value="0" >Unpublish</option>
+            {% else %} 
+                <option value="1" >Publish</option>
+                <option value="0" selected>Unpublish</option>
+            {% endif %} 
+        </select><br><br>
+        <input type="submit" value="update">
+    </form>
+
+{% endblock %}
+
